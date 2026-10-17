@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PediuPatrao</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <div class="app-shell">
+        <header th:replace="~{fragments/navegacao :: topbar}">
+            <div class="account"><span class="avatar" th:text="${#strings.substring(usuario, 0, 1).toUpperCase()}">U</span><span class="account-copy"><strong th:text="${usuario}">usuario</strong><span th:text="${perfil}">ROLE_ATENDENTE</span></span></div>
+        </header>
+        <div class="page-grid">
+            <nav th:replace="~{fragments/navegacao :: sidebar}"></nav>
+            <main class="page">
+                <div class="page-header"><div><p class="eyebrow">Painel de operacao</p><h1>Seu turno começou 🍕</h1><p class="subtle">Acompanhe pedidos, clientes e a rotina da pizzaria em um só lugar.</p></div><form th:action="@{/logout}" method="post"><button class="button-secondary" type="submit">Sair</button></form></div>
+                <div class="stats"><div class="stat"><small>Perfil ativo</small><b th:text="${perfil}">ROLE_ATENDENTE</b></div><div class="stat"><small>Atalho principal</small><b>Pedidos</b></div><div class="stat"><small>Status</small><b style="color:var(--basil)">● Online</b></div></div>
+                <div class="quick-links"><a class="quick-link" th:href="@{/pedidos}"><span class="icon">📦</span><b>Gerenciar pedidos</b><span>Registre, acompanhe e atualize etapas.</span></a><a class="quick-link" th:href="@{/clientes}"><span class="icon">👥</span><b>Clientes</b><span>Consulte e mantenha os dados em dia.</span></a><a class="quick-link" th:href="@{/auditoria}"><span class="icon">◌</span><b>Auditoria</b><span>Veja as operações registradas.</span></a><a class="quick-link" th:href="@{/usuarios}"><span class="icon">⚙</span><b>Usuários</b><span>Administre perfis e acessos.</span></a></div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

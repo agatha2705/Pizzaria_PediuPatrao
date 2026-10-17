@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Novo pedido - PediuPatrao</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script defer th:src="@{/js/pedido-itens.js}"></script>
+</head>
+<body><div class="app-shell"><header th:replace="~{fragments/navegacao :: topbar}"></header><div class="page-grid"><nav th:replace="~{fragments/navegacao :: sidebar}"></nav>
+    <main class="page"><div class="page-header"><div><p class="eyebrow">Novo pedido</p><h1>Vamos montar o pedido.</h1><p class="subtle">Os valores são calculados com segurança no servidor.</p></div></div>
+        <form class="form-card" th:action="@{/pedidos}" th:object="${pedido}" method="post"><div class="field-grid">
+            <label class="field full">Cliente
+                    <select th:field="*{clienteId}" required>
+                        <option value="">Selecione</option>
+                        <option th:each="cliente : ${clientes}" th:value="${cliente.id}" th:text="${cliente.nome}">Cliente</option>
+                    </select>
+                </label>
+            <section class="order-items full" data-order-items aria-label="Itens do pedido">
+                <div class="order-item-row" th:each="item, itemStatus : *{itens}" data-item-row>
+                    <label class="field">Produto
+                        <select th:field="*{itens[__${itemStatus.index}__].produtoId}"
+                                data-name-template="itens[__INDEX__].produtoId" required>
+                            <option value="">Selecione</option>
+                            <option th:each="produto : ${produtos}" th:value="${produto.id}"
+                                    th:text="${produto.nome + ' - R$ ' + produto.preco}">Produto</option>
+                        </select>
+                    </label>
+                    <label class="field">Quantidade
+                        <input th:field="*{itens[__${itemStatus.index}__].quantidade}"
+                               data-name-template="itens[__INDEX__].quantidade" type="number" min="1" required>
+                    </label>
+                    <button class="button button-secondary remove-item" type="button" data-remove-item>Remover</button>
+                </div>
+            </section>
+            <button class="button button-secondary add-item" type="button" data-add-item>+ Adicionar item</button>
+        </div><div class="form-actions"><button type="submit">Registrar pedido</button><a class="button button-secondary" th:href="@{/pedidos}">Cancelar</a></div></form>
+        <template id="item-template">
+            <div class="order-item-row" data-item-row>
+                <label class="field">Produto
+                    <select name="itens[__INDEX__].produtoId" data-name-template="itens[__INDEX__].produtoId" required>
+                        <option value="">Selecione</option>
+                        <option th:each="produto : ${produtos}" th:value="${produto.id}"
+                                th:text="${produto.nome + ' - R$ ' + produto.preco}">Produto</option>
+                    </select>
+                </label>
+                <label class="field">Quantidade
+                    <input name="itens[__INDEX__].quantidade" data-name-template="itens[__INDEX__].quantidade"
+                           type="number" min="1" value="1" required>
+                </label>
+                <button class="button button-secondary remove-item" type="button" data-remove-item>Remover</button>
+            </div>
+        </template>
+    </main></div></div>
+</body>
+</html>

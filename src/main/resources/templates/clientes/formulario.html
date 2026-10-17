@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${titulo} + ' - PediuPatrao'">Cliente - PediuPatrao</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script defer th:src="@{/js/telefone.js}"></script>
+</head>
+<body><div class="app-shell"><header th:replace="~{fragments/navegacao :: topbar}"></header><div class="page-grid"><nav th:replace="~{fragments/navegacao :: sidebar}"></nav>
+    <main class="page"><div class="page-header"><div><p class="eyebrow">Cadastro</p><h1 th:text="${titulo}">Cliente</h1></div></div>
+        <form class="form-card" th:action="${acao}" th:object="${cliente}" method="post"><div class="field-grid">
+            <label class="field full">Nome <input th:field="*{nome}" required></label><label class="field">Telefone <input th:field="*{telefone}" type="tel" inputmode="tel" maxlength="15" placeholder="(11) 98765-4321" data-phone required><small class="field-error" th:errors="*{telefone}"></small></label><label class="field">E-mail <input th:field="*{email}" type="email"></label><label class="field full">Logradouro <input th:field="*{logradouro}" required></label><label class="field">Número <input th:field="*{numero}" required></label><label class="field">Bairro <input th:field="*{bairro}" required></label><label class="field full">Cidade <input th:field="*{cidade}" required></label>
+        </div><div class="form-actions"><button type="submit">Salvar cliente</button><a class="button button-secondary" th:href="@{/clientes}">Cancelar</a></div></form>
+    </main></div></div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Entrar - PediuPatrao</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="login-shell">
+    <main class="login-card">
+        <a class="brand" href="#"><span class="brand-mark">🍕</span><span>PediuPatrão<br><small>central de pedidos</small></span></a>
+        <p class="eyebrow">Acesso ao sistema</p><h1>Bem-vindo de volta.</h1><p class="subtle">Entre para continuar sua operação.</p>
+        <p class="notice" th:if="${param.error}">Usuário ou senha inválidos. Confira os dados e tente novamente.</p>
+        <p class="notice" th:if="${param.logout}">Sessão encerrada com segurança.</p>
+        <form th:action="@{/login}" method="post">
+            <div class="field-grid"><label class="field full" for="username">Usuário<input id="username" name="username" type="text" autocomplete="username" required autofocus></label><label class="field full" for="password">Senha<input id="password" name="password" type="password" autocomplete="current-password" required></label></div>
+            <div class="form-actions"><button type="submit">Entrar na operação →</button></div>
+        </form>
+    </main>
+</body>
+</html>

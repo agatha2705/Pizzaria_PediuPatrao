@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastrar usuario - PediuPatrao</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body><div class="app-shell"><header th:replace="~{fragments/navegacao :: topbar}"></header><div class="page-grid"><nav th:replace="~{fragments/navegacao :: sidebar}"></nav>
+    <main class="page"><div class="page-header"><div><p class="eyebrow">Controle de acesso</p><h1>Cadastrar usuário</h1><p class="subtle">Defina o perfil com atenção. As permissões são aplicadas no backend.</p></div></div>
+        <form class="form-card" th:action="@{/usuarios}" th:object="${usuario}" method="post"><div class="field-grid"><label class="field">Usuário de acesso <input th:field="*{username}" required><small class="field-error" th:errors="*{username}"></small></label><label class="field">Senha <input th:field="*{senha}" type="password" minlength="8" required><small class="field-error" th:errors="*{senha}"></small></label><label class="field full">Perfil<select th:field="*{perfil}" required><option value="">Selecione</option><option th:each="perfil : ${perfis}" th:value="${perfil}" th:text="${perfil}">Perfil</option></select><small class="field-error" th:errors="*{perfil}"></small></label></div><div class="form-actions"><button type="submit">Cadastrar usuário</button><a class="button button-secondary" th:href="@{/usuarios}">Cancelar</a></div></form>
+    </main></div></div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: pediupatrao
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/pediupatrao}
+  thymeleaf:
+    cache: false
+
+server:
+  error:
+    include-message: always

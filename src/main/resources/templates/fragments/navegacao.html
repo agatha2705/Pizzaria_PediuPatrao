@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <header th:fragment="topbar" class="topbar">
+        <a class="brand" th:href="@{/}"><span class="brand-mark">🍕</span><span>PediuPatrão<br><small>central de pedidos</small></span></a>
+    </header>
+    <nav th:fragment="sidebar" class="sidebar" aria-label="Navegação principal">
+        <p class="nav-label">Operação</p>
+        <a th:href="@{/}" th:classappend="${rotaAtual == '/'} ? ' active' : ''">Visão geral</a>
+        <a th:href="@{/pedidos}" th:classappend="${rotaAtual.startsWith('/pedidos')} ? ' active' : ''">Pedidos</a>
+        <a th:href="@{/clientes}" th:classappend="${rotaAtual.startsWith('/clientes')} ? ' active' : ''">Clientes</a>
+        <div class="nav-divider" aria-hidden="true"></div>
+        <p class="nav-label">Gestão</p>
+        <a th:href="@{/auditoria}" th:classappend="${rotaAtual.startsWith('/auditoria')} ? ' active' : ''">Auditoria</a>
+        <a th:href="@{/usuarios}" th:classappend="${rotaAtual.startsWith('/usuarios')} ? ' active' : ''">Usuários</a>
+    </nav>
+</body>
+</html>

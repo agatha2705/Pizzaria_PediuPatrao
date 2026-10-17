@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Usuarios - PediuPatrao</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body><div class="app-shell"><header th:replace="~{fragments/navegacao :: topbar}"></header><div class="page-grid"><nav th:replace="~{fragments/navegacao :: sidebar}"></nav>
+    <main class="page"><div class="page-header"><div><p class="eyebrow">Controle de acesso</p><h1>Usuários</h1><p class="subtle">Cadastre pessoas e defina o perfil de acesso de cada uma.</p></div><div class="header-actions"><a class="text-action" th:if="${not mostrandoInativos}" th:href="@{/usuarios(inativos=true)}">Mostrar inativos</a><a class="text-action" th:if="${mostrandoInativos}" th:href="@{/usuarios}">Ocultar inativos</a><a class="button" th:href="@{/usuarios/novo}">+ Cadastrar usuário</a></div></div><p class="success-notice" th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">Alteração salva.</p>
+        <div class="table-wrap"><table>
+            <thead><tr><th>Usuário</th><th>Perfil</th><th>Status</th><th>Permissão</th></tr></thead>
+            <tbody>
+                <tr th:each="usuario : ${usuarios}">
+                    <td th:text="${usuario.username}">Usuario</td>
+                    <td th:text="${usuario.perfil}">Perfil</td>
+                    <td><span class="tag" th:classappend="${usuario.ativo} ? '' : ' cancelado'" th:text="${usuario.ativo ? 'Ativo' : 'Inativo'}">Ativo</span></td>
+                    <td>
+                        <form class="role-select-form" th:if="${usuario.username != usuarioAtual and usuario.ativo}" th:action="@{/usuarios/{id}/perfil(id=${usuario.id})}" method="post">
+                            <select name="perfil">
+                                <option th:each="perfil : ${perfis}" th:value="${perfil}" th:text="${perfil}" th:selected="${perfil == usuario.perfil}">Perfil</option>
+                            </select>
+                            <button type="submit">Atualizar perfil</button>
+                        </form>
+                        <form class="deactivate-form" th:if="${usuario.username != usuarioAtual and usuario.ativo}" th:action="@{/usuarios/{id}/desativar(id=${usuario.id})}" method="post"><button class="button-danger" type="submit">Desativar usuário</button></form>
+                        <span class="self-role" th:if="${usuario.username == usuarioAtual}">Por segurança, não é possível alterar a própria conta</span><span class="self-role" th:if="${not usuario.ativo}">Acesso desativado</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table></div>
+    </main></div></div>
+</body>
+</html>

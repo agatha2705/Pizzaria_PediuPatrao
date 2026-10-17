@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Clientes - PediuPatrao</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body><div class="app-shell"><header th:replace="~{fragments/navegacao :: topbar}"></header><div class="page-grid"><nav th:replace="~{fragments/navegacao :: sidebar}"></nav>
+    <main class="page">
+        <div class="page-header"><div><p class="eyebrow">Base de atendimento</p><h1>Clientes</h1><p class="subtle">Dados organizados para pedidos mais rápidos.</p></div><a class="button" th:href="@{/clientes/novo}">+ Cadastrar cliente</a></div>
+        <p th:if="${#lists.isEmpty(clientes)}">Nenhum cliente cadastrado.</p>
+        <div class="table-wrap" th:if="${not #lists.isEmpty(clientes)}"><table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                    <th>Endereco</th>
+                    <th>Acao</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="cliente : ${clientes}">
+                    <td th:text="${cliente.nome}">Nome</td>
+                    <td th:text="${cliente.telefone}">Telefone</td>
+                    <td th:text="${cliente.logradouro + ', ' + cliente.numero + ' - ' + cliente.bairro}">Endereco</td>
+                    <td><a th:href="@{/clientes/{id}/editar(id=${cliente.id})}">Alterar</a></td>
+                </tr>
+            </tbody>
+        </table></div>
+    </main></div></div>
+</body>
+</html>

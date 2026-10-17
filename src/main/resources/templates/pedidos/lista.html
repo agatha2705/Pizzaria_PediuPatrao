@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pedidos - PediuPatrao</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body><div class="app-shell"><header th:replace="~{fragments/navegacao :: topbar}"></header><div class="page-grid"><nav th:replace="~{fragments/navegacao :: sidebar}"></nav>
+    <main class="page">
+        <div class="page-header"><div><p class="eyebrow">Fila de produção</p><h1>Pedidos</h1><p class="subtle">Acompanhe cada pedido, da entrada à finalização.</p></div><a class="button" th:href="@{/pedidos/novo}">+ Registrar pedido</a></div>
+        <p th:if="${#lists.isEmpty(pedidos)}">Nenhum pedido registrado.</p>
+        <section class="order-card" th:each="pedido : ${pedidos}">
+            <div class="order-meta"><div><span class="order-id" th:text="${'Pedido #' + pedido.id}">Pedido</span><h2 th:text="${pedido.status.descricao}">Recebido</h2></div><span class="tag" th:classappend="${pedido.status.name() == 'CANCELADO'} ? ' cancelado' : ''" th:text="${pedido.status.descricao}">Recebido</span></div>
+            <p><strong>Entrada:</strong> <span th:text="${pedido.dataHoraEntrada}">data</span> por <span th:text="${pedido.responsavelEntrada}">usuario</span></p>
+            <p><strong>Itens:</strong></p>
+            <ul><li th:each="item : ${pedido.itens}" th:text="${item.quantidade + 'x ' + item.nomeProduto + ' - R$ ' + item.subtotal}">Item</li></ul>
+            <p class="money" th:text="${'Total R$ ' + pedido.valorTotal}">R$ 0,00</p>
+            <p th:if="${pedido.dataHoraSaida != null}"><strong>Saida:</strong> <span th:text="${pedido.dataHoraSaida}">data</span> por <span th:text="${pedido.responsavelSaida}">usuario</span></p>
+            <div th:if="${podeAtualizarStatus and pedido.status.name() != 'FINALIZADO' and pedido.status.name() != 'CANCELADO'}">
+                <form class="inline-form" th:if="${pedido.status.name() != 'PRONTO'}" th:action="@{/pedidos/{id}/status(id=${pedido.id})}" method="post">
+                    <input th:if="${pedido.status.name() == 'RECEBIDO'}" type="hidden" name="status" value="EM_PREPARACAO">
+                    <input th:if="${pedido.status.name() == 'EM_PREPARACAO'}" type="hidden" name="status" value="PRONTO">
+                    <input th:if="${pedido.status.name() == 'SAIU_PARA_ENTREGA' or pedido.status.name() == 'RETIRADO'}" type="hidden" name="status" value="FINALIZADO">
+                    <button th:if="${pedido.status.name() == 'RECEBIDO'}" type="submit">Enviar para preparo →</button>
+                    <button th:if="${pedido.status.name() == 'EM_PREPARACAO'}" type="submit">Marcar como pronto ✓</button>
+                    <button th:if="${pedido.status.name() == 'SAIU_PARA_ENTREGA' or pedido.status.name() == 'RETIRADO'}" type="submit">Finalizar pedido ✓</button>
+                </form>
+                <div class="inline-form" th:if="${pedido.status.name() == 'PRONTO'}">
+                    <form th:action="@{/pedidos/{id}/status(id=${pedido.id})}" method="post"><input type="hidden" name="status" value="SAIU_PARA_ENTREGA"><button type="submit">Saiu para entrega →</button></form>
+                    <form th:action="@{/pedidos/{id}/status(id=${pedido.id})}" method="post"><input type="hidden" name="status" value="RETIRADO"><button class="button-secondary" type="submit">Retirado pelo cliente</button></form>
+                </div>
+            </div>
+            <div th:if="${ehGerente and pedido.status.name() != 'CANCELADO' and pedido.status.name() != 'FINALIZADO' and pedido.dataHoraSaida == null}">
+                <form class="inline-form" th:action="@{/pedidos/{id}/desconto(id=${pedido.id})}" method="post">
+                    <label class="field">Desconto (%) <input name="percentual" type="number" min="0.01" max="20" step="0.01" th:value="${pedido.percentualDesconto}" required></label>
+                    <button type="submit">Aplicar desconto</button>
+                </form>
+                <form class="inline-form" th:action="@{/pedidos/{id}/cancelamento(id=${pedido.id})}" method="post">
+                    <label class="field">Justificativa do cancelamento <input name="justificativa" required></label>
+                    <button type="submit">Cancelar pedido</button>
+                </form>
+            </div>
+        </section>
+    </main></div></div>
+</body>
+</html>

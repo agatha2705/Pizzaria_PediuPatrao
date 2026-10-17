@@ -97,13 +97,3 @@ Recebido > Em preparação > Pronto > Saiu para entrega ou Retirado > Finalizado
 | `PATCH` | `/api/pedidos/{id}/desconto` | Aplica desconto |
 | `PATCH` | `/api/pedidos/{id}/cancelamento` | Cancela pedido |
 | `GET` | `/api/auditoria` | Consulta a auditoria |
-
-## Roteiro sugerido para o vídeo
-
-1. Entre como ADMIN e apresente a gestão de usuários.
-2. Entre como ATENDENTE, cadastre/edite um cliente e registre um pedido com mais de um item.
-3. Atualize o pedido de Recebido para Em preparação e Pronto.
-4. Demonstre que o atendente não acessa auditoria, desconto ou cancelamento.
-5. Entre como GERENTE, aplique um desconto válido e cancele outro pedido com justificativa.
-6. Tente aplicar desconto acima de 20% ou cancelar um pedido que já saiu.
-7. Consulte a auditoria como gerente e apresente os eventos gerados.

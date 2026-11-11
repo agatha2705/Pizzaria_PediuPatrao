@@ -13,6 +13,7 @@ public class InicioController {
         model.addAttribute("usuario", authentication.getName());
         String perfil = authentication.getAuthorities().iterator().next().getAuthority().replace("ROLE_", "");
         model.addAttribute("perfil", perfil);
+        model.addAttribute("podeAcessarDashboard", "ADMIN".equals(perfil) || "GERENTE".equals(perfil));
         return "index";
     }
 

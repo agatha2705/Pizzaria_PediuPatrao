@@ -19,12 +19,12 @@ public class ClienteService {
         this.auditoriaService = auditoriaService;
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'GERENTE', 'ATENDENTE')")
+    @PreAuthorize("hasAnyRole('GERENTE', 'ATENDENTE')")
     public List<Cliente> listar() {
         return repository.findAll();
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'GERENTE', 'ATENDENTE')")
+    @PreAuthorize("hasAnyRole('GERENTE', 'ATENDENTE')")
     public Cliente buscarPorId(String id) {
         return repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Cliente nao encontrado"));
     }

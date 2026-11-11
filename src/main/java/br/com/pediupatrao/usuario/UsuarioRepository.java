@@ -11,4 +11,6 @@ public interface UsuarioRepository extends MongoRepository<Usuario, String> {
     boolean existsByUsername(String username);
 
     List<Usuario> findAllByAtivoTrue();
+
+    long countByPerfilAndAtivoTrue(Perfil perfil);
 }

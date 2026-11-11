@@ -3,20 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PediuPatrao</title>
+    <title>PediuPatrão</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script th:if="${podeAcessarDashboard}" defer th:src="@{/js/dashboard.js}"></script>
 </head>
 <body>
     <div class="app-shell">
-        <header th:replace="~{fragments/navegacao :: topbar}">
-            <div class="account"><span class="avatar" th:text="${#strings.substring(usuario, 0, 1).toUpperCase()}">U</span><span class="account-copy"><strong th:text="${usuario}">usuario</strong><span th:text="${perfil}">ROLE_ATENDENTE</span></span></div>
-        </header>
+        <header th:replace="~{fragments/navegacao :: topbar}"></header>
         <div class="page-grid">
             <nav th:replace="~{fragments/navegacao :: sidebar}"></nav>
             <main class="page">
-                <div class="page-header"><div><p class="eyebrow">Painel de operacao</p><h1>Seu turno começou 🍕</h1><p class="subtle">Acompanhe pedidos, clientes e a rotina da pizzaria em um só lugar.</p></div><form th:action="@{/logout}" method="post"><button class="button-secondary" type="submit">Sair</button></form></div>
-                <div class="stats"><div class="stat"><small>Perfil ativo</small><b th:text="${perfil}">ROLE_ATENDENTE</b></div><div class="stat"><small>Atalho principal</small><b>Pedidos</b></div><div class="stat"><small>Status</small><b style="color:var(--basil)">● Online</b></div></div>
-                <div class="quick-links"><a class="quick-link" th:href="@{/pedidos}"><span class="icon">📦</span><b>Gerenciar pedidos</b><span>Registre, acompanhe e atualize etapas.</span></a><a class="quick-link" th:href="@{/clientes}"><span class="icon">👥</span><b>Clientes</b><span>Consulte e mantenha os dados em dia.</span></a><a class="quick-link" th:href="@{/auditoria}"><span class="icon">◌</span><b>Auditoria</b><span>Veja as operações registradas.</span></a><a class="quick-link" th:href="@{/usuarios}"><span class="icon">⚙</span><b>Usuários</b><span>Administre perfis e acessos.</span></a></div>
+                <section th:if="${podeAcessarDashboard}" class="dashboard" aria-labelledby="titulo-dashboard">
+                    <div class="page-header dashboard-header">
+                        <div>
+                            <p class="eyebrow">Visão administrativa</p>
+                            <h1 id="titulo-dashboard">Como estão as vendas?</h1>
+                            <p class="subtle">Acompanhe indicadores, pedidos e produtos do período selecionado.</p>
+                        </div>
+                        <form th:action="@{/logout}" method="post"><button class="button-secondary" type="submit">Sair</button></form>
+                    </div>
+
+                    <form class="dashboard-filters" id="dashboard-filtros" novalidate>
+                        <label class="field">Data inicial <input type="date" id="inicio" name="inicio" required></label>
+                        <label class="field">Data final <input type="date" id="fim" name="fim" required></label>
+                        <div class="filter-actions">
+                            <button type="button" class="button-secondary" data-periodo="hoje">Hoje</button>
+                            <button type="button" class="button-secondary" data-periodo="7">7 dias</button>
+                            <button type="button" class="button-secondary" data-periodo="mes">Este mês</button>
+                            <button type="submit">Atualizar dados</button>
+                        </div>
+                    </form>
+
+                    <p class="dashboard-feedback" id="dashboard-feedback" aria-live="polite">Carregando indicadores…</p>
+
+                    <section class="dashboard-metrics" aria-label="Indicadores gerais">
+                        <article class="metric-card"><small>Faturamento</small><strong id="metrica-faturamento">—</strong><span>Pedidos finalizados</span></article>
+                        <article class="metric-card"><small>Ticket médio</small><strong id="metrica-ticket">—</strong><span>Por pedido finalizado</span></article>
+                        <article class="metric-card"><small>Pedidos recebidos</small><strong id="metrica-pedidos">—</strong><span>No período</span></article>
+                        <article class="metric-card"><small>Descontos</small><strong id="metrica-descontos">—</strong><span>Concedidos no período</span></article>
+                        <article class="metric-card"><small>Cancelamentos</small><strong id="metrica-cancelamentos">—</strong><span>No período</span></article>
+                    </section>
+
+                    <section class="dashboard-grid">
+                        <article class="dashboard-panel dashboard-panel-wide">
+                            <div class="panel-heading"><div><p class="eyebrow">Análise de vendas</p><h2>Faturamento por dia</h2></div><span class="subtle" id="grafico-total">—</span></div>
+                            <div class="sales-chart" id="grafico-vendas" role="img" aria-label="Gráfico de faturamento por dia"></div>
+                        </article>
+                        <article class="dashboard-panel">
+                            <div class="panel-heading"><div><p class="eyebrow">Operação</p><h2>Situação dos pedidos</h2></div></div>
+                            <div class="status-chart" id="grafico-status"></div>
+                        </article>
+                        <article class="dashboard-panel">
+                            <div class="panel-heading"><div><p class="eyebrow">Ranking</p><h2>Produtos mais vendidos</h2></div></div>
+                            <ol class="product-ranking" id="ranking-produtos"></ol>
+                        </article>
+                    </section>
+                </section>
+
+                <section th:unless="${podeAcessarDashboard}" aria-labelledby="titulo-operacao">
+                    <div class="page-header"><div><p class="eyebrow">Painel de operação</p><h1 id="titulo-operacao">Seu turno começou</h1><p class="subtle">Registre pedidos, mantenha os clientes em dia e acompanhe a produção.</p></div><form th:action="@{/logout}" method="post"><button class="button-secondary" type="submit">Sair</button></form></div>
+                    <div class="stats"><div class="stat"><small>Perfil ativo</small><b th:text="${perfil}">ATENDENTE</b></div><div class="stat"><small>Atalho principal</small><b>Pedidos</b></div><div class="stat"><small>Status</small><b style="color:var(--basil)">Online</b></div></div>
+                    <div class="quick-links"><a class="quick-link" th:href="@{/pedidos}"><b>Gerenciar pedidos</b><span>Registre, acompanhe e atualize etapas.</span></a><a class="quick-link" th:href="@{/clientes}"><b>Clientes</b><span>Cadastre e atualize informações.</span></a></div>
+                </section>
             </main>
         </div>
     </div>

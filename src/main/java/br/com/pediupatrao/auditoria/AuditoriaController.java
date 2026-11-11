@@ -18,7 +18,9 @@ public class AuditoriaController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'GERENTE')")
-    public List<RegistroAuditoria> listar() {
-        return repository.findAllByOrderByDataHoraDesc();
+    public List<RegistroAuditoriaResposta> listar() {
+        return repository.findAllByOrderByDataHoraDesc().stream()
+                .map(RegistroAuditoriaResposta::de)
+                .toList();
     }
 }

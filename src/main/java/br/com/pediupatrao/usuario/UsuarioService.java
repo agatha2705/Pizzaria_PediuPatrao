@@ -42,6 +42,7 @@ public class UsuarioService {
         if (usuario.getUsername().equals(usuarioAtual)) {
             throw new IllegalArgumentException("Nao e permitido alterar o proprio perfil");
         }
+        validarUltimoAdministrador(usuario, novoPerfil);
         usuario.setPerfil(novoPerfil);
         repository.save(usuario);
     }
@@ -53,7 +54,16 @@ public class UsuarioService {
         if (usuario.getUsername().equals(usuarioAtual)) {
             throw new IllegalArgumentException("Nao e permitido desativar a propria conta");
         }
+        validarUltimoAdministrador(usuario, null);
         usuario.setAtivo(false);
         repository.save(usuario);
+    }
+
+    private void validarUltimoAdministrador(Usuario usuario, Perfil novoPerfil) {
+        boolean deixaDeSerAdmin = usuario.isAtivo() && usuario.getPerfil() == Perfil.ADMIN
+                && (novoPerfil == null || novoPerfil != Perfil.ADMIN);
+        if (deixaDeSerAdmin && repository.countByPerfilAndAtivoTrue(Perfil.ADMIN) <= 1) {
+            throw new IllegalArgumentException("Nao e permitido desativar ou rebaixar o ultimo administrador ativo");
+        }
     }
 }

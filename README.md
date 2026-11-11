@@ -43,7 +43,7 @@ As senhas são armazenadas com BCrypt. Essas credenciais são apenas para demons
 | Recurso | ADMIN | GERENTE | ATENDENTE |
 | --- | :---: | :---: | :---: |
 | Gerenciar usuários e perfis | ✓ | — | — |
-| Consultar clientes | ✓ | ✓ | ✓ |
+| Consultar clientes | — | ✓ | ✓ |
 | Cadastrar e alterar clientes | — | — | ✓ |
 | Registrar pedidos | — | — | ✓ |
 | Atualizar status dos pedidos | — | ✓ | ✓ |
@@ -64,6 +64,7 @@ As permissões são protegidas no backend com Spring Security e autorização po
 ### Pedidos
 
 - Um pedido é associado a um cliente e pode conter vários itens.
+- Cada item aceita quantidade entre 1 e 99, validada no formulário, na API e na camada de serviço.
 - Preços, subtotal, desconto e total são calculados no servidor.
 - A entrada registra automaticamente o responsável e a data/hora.
 - Fluxo permitido:
@@ -82,6 +83,20 @@ Recebido > Em preparação > Pronto > Saiu para entrega ou Retirado > Finalizado
 - Cada evento guarda usuário, perfil, data/hora, entidade, valores anteriores/novos e justificativa quando aplicável.
 - A consulta é somente leitura e restrita a ADMIN e GERENTE.
 - A interface apresenta apenas o necessário, evitando exposição desnecessária de dados pessoais.
+- A API de auditoria mascara nome, telefone, e-mail e endereço de clientes.
+
+### Segurança de contas
+
+- O administrador não pode alterar o próprio perfil ou desativar a própria conta.
+- O sistema impede a desativação ou o rebaixamento do último ADMIN ativo.
+
+## Testes automatizados
+
+O projeto contém testes unitários para regras críticas: proteção do último administrador, validação de quantidades e mascaramento de dados pessoais na resposta da auditoria.
+
+```powershell
+mvn test
+```
 
 ## Endpoints REST principais
 
@@ -97,6 +112,12 @@ Recebido > Em preparação > Pronto > Saiu para entrega ou Retirado > Finalizado
 | `PATCH` | `/api/pedidos/{id}/desconto` | Aplica desconto |
 | `PATCH` | `/api/pedidos/{id}/cancelamento` | Cancela pedido |
 | `GET` | `/api/auditoria` | Consulta a auditoria |
+
+## Dashboard administrativo
+
+A Visão geral apresenta indicadores de vendas para ADMIN e GERENTE. Ela consulta a API do dashboard com filtros por período, exibe gráfico de faturamento diário, situação dos pedidos e ranking de produtos.
+
+A documentação completa da Parte 2 está em [docs/dashboard-administrativo.md](docs/dashboard-administrativo.md).
 
 ## Roteiro sugerido para o vídeo
 

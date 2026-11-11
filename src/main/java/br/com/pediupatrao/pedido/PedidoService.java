@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 public class PedidoService {
 
     private static final BigDecimal DESCONTO_MAXIMO = new BigDecimal("20.00");
+    private static final int QUANTIDADE_MAXIMA_ITEM = 99;
     private final PedidoRepository pedidos;
     private final ClienteRepository clientes;
     private final ProdutoRepository produtos;
@@ -126,8 +127,17 @@ public class PedidoService {
     }
 
     private List<ItemPedido> criarItens(List<ItemPedidoRequest> solicitados) {
+        if (solicitados == null || solicitados.isEmpty() || solicitados.size() > 20) {
+            throw new IllegalArgumentException("O pedido deve conter entre 1 e 20 itens");
+        }
         List<ItemPedido> itens = new ArrayList<>();
         for (ItemPedidoRequest solicitado : solicitados) {
+            if (solicitado == null || solicitado.produtoId() == null || solicitado.produtoId().isBlank()) {
+                throw new IllegalArgumentException("Produto do item e obrigatorio");
+            }
+            if (solicitado.quantidade() < 1 || solicitado.quantidade() > QUANTIDADE_MAXIMA_ITEM) {
+                throw new IllegalArgumentException("A quantidade de cada item deve estar entre 1 e 99");
+            }
             Produto produto = produtos.findById(solicitado.produtoId())
                     .orElseThrow(() -> new IllegalArgumentException("Produto nao encontrado"));
             if (!produto.isAtivo()) {
